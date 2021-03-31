@@ -2,7 +2,7 @@ import { Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/
 import { Field, ObjectType } from "type-graphql";
 import { v4 as uuid } from "uuid";
 import { Comment } from "./Comment";
-import { Post } from "./Post";
+import { Thread } from "./Thread";
 
 @ObjectType()
 @Entity({ tableName: "Users" })
@@ -18,9 +18,9 @@ export class User {
   @Property({ nullable: false })
   password!: string;
 
-  @Field(() => [Post])
-  @OneToMany(() => Post, (post) => post.createdBy)
-  post = new Collection<Post>(this);
+  @Field(() => [Thread])
+  @OneToMany(() => Thread, (post) => post.createdBy)
+  threads = new Collection<Thread>(this);
 
   @Field(() => [Comment])
   @OneToMany(() => Comment, (comment) => comment.createdBy)

@@ -1,11 +1,7 @@
-import { Arg, ClassType, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
-import AppContext from "../AppContext";
+import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import AppContext from "../AppContext";
 import { User } from "../entities/User";
 import argon2 from "argon2";
-import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
-
-import JWT from "jsonwebtoken";
 import { __jwt_secret__ } from "../env";
 import { createToken } from "../authentication";
 
@@ -57,7 +53,7 @@ export class UserResolver {
     }
 
     // check if username already registered
-    const user = await em.find(User, { username });
+    const user = await em.find(User, { username }, ["threads", "comments"]);
     // user already registered
     if (user.length !== 0) {
       return {
@@ -88,7 +84,7 @@ export class UserResolver {
       };
     }
 
-    const usersWithSameUsername = await em.find(User, { username });
+    const usersWithSameUsername = await em.find(User, { username }, ["threads", "comments"]);
     // check if user exists
     if (usersWithSameUsername.length === 0) {
       return {
@@ -123,7 +119,8 @@ export class UserResolver {
       };
     }
 
-    const users = await em.find(User, { id: auth.userId });
+    const users = await em.find(User, { id: auth.userId }, ["threads", "comments"]);
+    console.log(users);
     if (users.length === 0) {
       return {
         error: "User not Found.",
@@ -151,7 +148,7 @@ export class UserResolver {
       };
     }
 
-    const users = await em.find(User, { id });
+    const users = await em.find(User, { id }, ["threads", "comments"]);
     if (users.length === 0) {
       return {
         error: "User not found.",
@@ -180,7 +177,7 @@ export class UserResolver {
     }
 
     // check if user exist
-    const users = await em.find(User, { username });
+    const users = await em.find(User, { username }, ["threads", "comments"]);
     if (users.length === 0) {
       return {
         error: "User Not Found.",

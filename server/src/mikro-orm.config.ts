@@ -1,12 +1,12 @@
 import { MikroORM } from "@mikro-orm/core";
 import { Comment } from "./entities/Comment";
-import { Post } from "./entities/Post";
+import { Thread } from "./entities/Thread";
 import { User } from "./entities/User";
 import { __db_name__, __prod__ } from "./env";
 import path from "path";
 
 export default {
-  entities: [User, Post, Comment],
+  entities: [User, Thread, Comment],
   dbName: __db_name__,
   type: "postgresql",
   user: "postgres",
@@ -21,6 +21,6 @@ export default {
     allOrNothing: true, // wrap all migrations in master transaction
     dropTables: true, // allow to disable table dropping
     safe: false, // allow to disable table and column dropping
-    emit: "js" // migration generation mode
-  }
+    emit: "js", // migration generation mode
+  },
 } as Parameters<typeof MikroORM.init>[0];
