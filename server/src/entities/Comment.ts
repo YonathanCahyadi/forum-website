@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ObjectType } from "type-graphql";
 import { v4 as uuid } from "uuid";
-import { Post } from "./Post";
+import { Thread } from "./Thread";
 import { User } from "./User";
 
 @ObjectType()
@@ -11,9 +11,9 @@ export class Comment {
   @PrimaryKey()
   id: string = uuid();
 
-  @Field(() => Post)
-  @ManyToOne(() => Post)
-  post!: Post;
+  @Field(() => Thread)
+  @ManyToOne(() => Thread)
+  post!: Thread;
 
   @Field(() => User)
   @ManyToOne(() => User)

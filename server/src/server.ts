@@ -8,6 +8,7 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/User";
 import AppContext from "./AppContext";
 import { verifyToken } from "./authentication";
+import { ThreadResolver } from "./resolvers/Thread";
 
 class Server {
   port: number;
@@ -37,7 +38,7 @@ class Server {
   private async startApolloServer(app: Express, db_connection: MikroORM<IDatabaseDriver<Connection>>) {
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver],
+        resolvers: [UserResolver, ThreadResolver],
         validate: false,
       }),
       context: ({ req, res }): AppContext => {
