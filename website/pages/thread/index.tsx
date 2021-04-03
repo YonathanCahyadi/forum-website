@@ -1,4 +1,3 @@
-import Navbar from "../../components/Navbar";
 import { useState } from "react";
 import Button from "../../components/Button";
 import Router from "next/router";
@@ -14,12 +13,12 @@ const CreatePost: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <div className="login">
+    <div className="layout">
       <div className="form-container">
         <label>Title</label>
         <input type="text" value={title} onChange={(e) => setTitle(e.currentTarget.value)} />
         <label>Content</label>
-        <textarea value={content} onChange={(e) => setContent(e.currentTarget.value)} />
+        <textarea className="new-thread-content" value={content} onChange={(e) => setContent(e.currentTarget.value)} />
 
         <Button
           name="Post"

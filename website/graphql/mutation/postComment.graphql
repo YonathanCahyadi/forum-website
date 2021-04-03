@@ -1,0 +1,15 @@
+mutation PostComment($threadId: String!, $comment: String!) {
+  postComment(threadId: $threadId, comment: $comment) {
+    data {
+      id
+      createdBy {
+        id
+        username
+      }
+      content
+      createdAt
+      updatedAt
+    }
+    error
+  }
+}

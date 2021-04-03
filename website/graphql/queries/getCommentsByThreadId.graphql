@@ -1,16 +1,14 @@
-query GetThreadById($id: String!) {
-  getThreadById(threadId: $id) {
+query GetCommentsByThreadId($threadId: String!) {
+  getCommentsByThreadId(threadId: $threadId) {
     data {
       id
-      title
+      updated
       content
       createdBy {
         id
         username
       }
       createdAt
-      updatedAt
-      updated
     }
     error
   }

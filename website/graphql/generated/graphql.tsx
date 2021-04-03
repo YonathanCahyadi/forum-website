@@ -27,6 +27,12 @@ export type Comment = {
   updated: Scalars['Boolean'];
 };
 
+export type CommentResponse = {
+  __typename?: 'CommentResponse';
+  data?: Maybe<Array<Comment>>;
+  error?: Maybe<Scalars['String']>;
+};
+
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -35,6 +41,7 @@ export type Mutation = {
   postThread: ThreadResponse;
   updateThread: ThreadResponse;
   deleteThread: ThreadResponse;
+  postComment: CommentResponse;
 };
 
 
@@ -67,6 +74,12 @@ export type MutationDeleteThreadArgs = {
   threadId: Scalars['String'];
 };
 
+
+export type MutationPostCommentArgs = {
+  comment: Scalars['String'];
+  threadId: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   me: UserResponse;
@@ -74,6 +87,7 @@ export type Query = {
   getUserByUsername: UserResponse;
   getAllThread: ThreadResponse;
   getThreadById: ThreadResponse;
+  getCommentsByThreadId: CommentResponse;
 };
 
 
@@ -93,6 +107,11 @@ export type QueryGetAllThreadArgs = {
 
 
 export type QueryGetThreadByIdArgs = {
+  threadId: Scalars['String'];
+};
+
+
+export type QueryGetCommentsByThreadIdArgs = {
   threadId: Scalars['String'];
 };
 
@@ -173,6 +192,28 @@ export type LoginMutation = (
   ) }
 );
 
+export type PostCommentMutationVariables = Exact<{
+  threadId: Scalars['String'];
+  comment: Scalars['String'];
+}>;
+
+
+export type PostCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { postComment: (
+    { __typename?: 'CommentResponse' }
+    & Pick<CommentResponse, 'error'>
+    & { data?: Maybe<Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content' | 'createdAt' | 'updatedAt'>
+      & { createdBy: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    )>> }
+  ) }
+);
+
 export type PostThreadMutationVariables = Exact<{
   title: Scalars['String'];
   content: Scalars['String'];
@@ -240,6 +281,27 @@ export type GetAllThreadQuery = (
   ) }
 );
 
+export type GetCommentsByThreadIdQueryVariables = Exact<{
+  threadId: Scalars['String'];
+}>;
+
+
+export type GetCommentsByThreadIdQuery = (
+  { __typename?: 'Query' }
+  & { getCommentsByThreadId: (
+    { __typename?: 'CommentResponse' }
+    & Pick<CommentResponse, 'error'>
+    & { data?: Maybe<Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'updated' | 'content' | 'createdAt'>
+      & { createdBy: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    )>> }
+  ) }
+);
+
 export type GetThreadByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -256,10 +318,7 @@ export type GetThreadByIdQuery = (
       & { createdBy: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username'>
-      ), comments: Array<(
-        { __typename?: 'Comment' }
-        & Pick<Comment, 'id'>
-      )> }
+      ) }
     )>> }
   ) }
 );
@@ -373,6 +432,50 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const PostCommentDocument = gql`
+    mutation PostComment($threadId: String!, $comment: String!) {
+  postComment(threadId: $threadId, comment: $comment) {
+    data {
+      id
+      createdBy {
+        id
+        username
+      }
+      content
+      createdAt
+      updatedAt
+    }
+    error
+  }
+}
+    `;
+export type PostCommentMutationFn = Apollo.MutationFunction<PostCommentMutation, PostCommentMutationVariables>;
+
+/**
+ * __usePostCommentMutation__
+ *
+ * To run a mutation, you first call `usePostCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postCommentMutation, { data, loading, error }] = usePostCommentMutation({
+ *   variables: {
+ *      threadId: // value for 'threadId'
+ *      comment: // value for 'comment'
+ *   },
+ * });
+ */
+export function usePostCommentMutation(baseOptions?: Apollo.MutationHookOptions<PostCommentMutation, PostCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PostCommentMutation, PostCommentMutationVariables>(PostCommentDocument, options);
+      }
+export type PostCommentMutationHookResult = ReturnType<typeof usePostCommentMutation>;
+export type PostCommentMutationResult = Apollo.MutationResult<PostCommentMutation>;
+export type PostCommentMutationOptions = Apollo.BaseMutationOptions<PostCommentMutation, PostCommentMutationVariables>;
 export const PostThreadDocument = gql`
     mutation PostThread($title: String!, $content: String!) {
   postThread(title: $title, content: $content) {
@@ -513,6 +616,51 @@ export function useGetAllThreadLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetAllThreadQueryHookResult = ReturnType<typeof useGetAllThreadQuery>;
 export type GetAllThreadLazyQueryHookResult = ReturnType<typeof useGetAllThreadLazyQuery>;
 export type GetAllThreadQueryResult = Apollo.QueryResult<GetAllThreadQuery, GetAllThreadQueryVariables>;
+export const GetCommentsByThreadIdDocument = gql`
+    query GetCommentsByThreadId($threadId: String!) {
+  getCommentsByThreadId(threadId: $threadId) {
+    data {
+      id
+      updated
+      content
+      createdBy {
+        id
+        username
+      }
+      createdAt
+    }
+    error
+  }
+}
+    `;
+
+/**
+ * __useGetCommentsByThreadIdQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsByThreadIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsByThreadIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsByThreadIdQuery({
+ *   variables: {
+ *      threadId: // value for 'threadId'
+ *   },
+ * });
+ */
+export function useGetCommentsByThreadIdQuery(baseOptions: Apollo.QueryHookOptions<GetCommentsByThreadIdQuery, GetCommentsByThreadIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCommentsByThreadIdQuery, GetCommentsByThreadIdQueryVariables>(GetCommentsByThreadIdDocument, options);
+      }
+export function useGetCommentsByThreadIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentsByThreadIdQuery, GetCommentsByThreadIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCommentsByThreadIdQuery, GetCommentsByThreadIdQueryVariables>(GetCommentsByThreadIdDocument, options);
+        }
+export type GetCommentsByThreadIdQueryHookResult = ReturnType<typeof useGetCommentsByThreadIdQuery>;
+export type GetCommentsByThreadIdLazyQueryHookResult = ReturnType<typeof useGetCommentsByThreadIdLazyQuery>;
+export type GetCommentsByThreadIdQueryResult = Apollo.QueryResult<GetCommentsByThreadIdQuery, GetCommentsByThreadIdQueryVariables>;
 export const GetThreadByIdDocument = gql`
     query GetThreadById($id: String!) {
   getThreadById(threadId: $id) {
@@ -523,9 +671,6 @@ export const GetThreadByIdDocument = gql`
       createdBy {
         id
         username
-      }
-      comments {
-        id
       }
       createdAt
       updatedAt
