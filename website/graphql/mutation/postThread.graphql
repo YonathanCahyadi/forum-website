@@ -1,0 +1,11 @@
+mutation PostThread($title: String!, $content: String!) {
+  postThread(title: $title, content: $content) {
+    data {
+      id
+      content
+      updated
+      createdAt
+    }
+    error
+  }
+}

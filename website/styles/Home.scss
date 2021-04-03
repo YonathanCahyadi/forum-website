@@ -1,0 +1,42 @@
+.home {
+  display: grid;
+
+  grid-template-columns: 0.3fr 1fr 0.3fr;
+  grid-template-rows: 0.1fr auto;
+
+  row-gap: 10px;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+
+  grid-column: 1/4;
+  grid-row: 1/2;
+
+  background-color: aqua;
+
+  width: 100%;
+  min-height: 3.5em;
+
+  display: flex;
+
+  justify-content: space-evenly;
+  align-items: center;
+
+  h1 {
+    color: white;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  ul {
+    display: flex;
+
+    li {
+      margin-left: 1em;
+      list-style: none;
+    }
+  }
+}

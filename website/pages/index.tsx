@@ -1,65 +1,37 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useEffect, useState } from "react";
+import Feed from "../components/Feed";
+import { __userId__ } from "../constants";
+import { useGetAllThreadQuery } from "../graphql/generated/graphql";
+import withApolloProvider from "../lib/withApolloProvider";
 
-export default function Home() {
+const Home: React.FC = () => {
+  const { data, error, loading, fetchMore, variables } = useGetAllThreadQuery({ variables: { page: 0 } });
+
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    setUserId(JSON.parse(localStorage.getItem(__userId__)));
+  });
+
+  if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+    <div className="home">
+      <Feed.Wraper>
+        {data &&
+          data.getAllThread.data.map((d) => (
+            <Feed.Item
+              key={`thread-${d.id}`}
+              linkOnClick={`post/${d.id}`}
+              id={d.id}
+              date={new Date(d.updatedAt)}
+              title={d.title}
+              createdByUsername={d.createdBy.username}
+              owner={d.createdBy.id === userId}
+            />
+          ))}
+      </Feed.Wraper>
     </div>
-  )
-}
+  );
+};
+
+export default withApolloProvider(Home);

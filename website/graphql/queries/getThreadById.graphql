@@ -1,0 +1,20 @@
+query GetThreadById($id: String!) {
+  getThreadById(threadId: $id) {
+    data {
+      id
+      title
+      content
+      createdBy {
+        id
+        username
+      }
+      comments {
+        id
+      }
+      createdAt
+      updatedAt
+      updated
+    }
+    error
+  }
+}

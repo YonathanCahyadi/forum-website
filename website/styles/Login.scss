@@ -1,0 +1,39 @@
+.login {
+  display: grid;
+
+  grid-template-columns: 0.3fr 1fr 0.3fr;
+  grid-template-rows: 0.1fr 1.5fr;
+
+  row-gap: 10px;
+
+  .form-container {
+    display: flex;
+
+    flex-direction: column;
+
+    grid-column: 2/3;
+
+    margin-top: auto;
+
+    min-height: 70vh;
+
+    input {
+      min-height: 2.5em;
+      border-radius: 0.5em;
+      border: 1px solid aqua;
+    }
+
+    label {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .form-info {
+      background-color: rgb(247, 193, 193);
+      border-radius: 0.5em;
+      padding: 1em;
+
+      margin-top: 3em;
+    }
+  }
+}
