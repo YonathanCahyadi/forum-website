@@ -15,13 +15,13 @@ const Home: React.FC = () => {
   if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
 
   return (
-    <div className="home">
+    <div className="layout">
       <Feed.Wraper>
         {data &&
           data.getAllThread.data.map((d) => (
             <Feed.Item
               key={`thread-${d.id}`}
-              linkOnClick={`post/${d.id}`}
+              linkOnClick={`thread/${d.id}`}
               id={d.id}
               date={new Date(d.updatedAt)}
               title={d.title}

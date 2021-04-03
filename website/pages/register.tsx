@@ -17,7 +17,7 @@ const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <div className="login">
+    <div className="layout">
       <div className="form-container">
         <label>Username</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.currentTarget.value)} />

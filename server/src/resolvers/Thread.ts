@@ -33,7 +33,7 @@ export class ThreadResolver {
     const threads = await em.find(
       Thread,
       { deleted: false },
-      ["createdBy"],
+      ["createdBy", "comments"],
       { updatedAt: QueryOrder.DESC },
       this.limitPerPage,
       page * this.limitPerPage

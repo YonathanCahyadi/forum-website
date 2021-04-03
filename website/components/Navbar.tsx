@@ -16,8 +16,8 @@ const Navbar: React.FC = () => {
         {data?.me.data ? (
           <>
             <li>
-              <Link href="/post">
-                <Button name="Add Post" />
+              <Link href="/thread">
+                <Button name="Post Thread" />
               </Link>
             </li>
             <li>

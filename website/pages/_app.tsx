@@ -1,11 +1,15 @@
-import "../styles/globals.css";
+import "../styles/globals.scss";
 
-import "../styles/Home.scss";
-import "../styles/Thread.scss";
-import "../styles/Login.scss";
+import "../styles/HomePage.scss";
+import "../styles/ThreadPage.scss";
+import "../styles/LoginPage.scss";
+import "../styles/ThreadPostPage.scss";
 
 import "../styles/Feed.scss";
 import "../styles/Button.scss";
+import "../styles/Comment.scss";
+import "../styles/Spinner.scss";
+
 import Navbar from "../components/Navbar";
 
 function MyApp({ Component, pageProps }) {

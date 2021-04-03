@@ -10,6 +10,7 @@ import AppContext from "./AppContext";
 import { verifyToken } from "./authentication";
 import { ThreadResolver } from "./resolvers/Thread";
 import cors from "cors";
+import CommentResolver from "./resolvers/Comment";
 
 class Server {
   port: number;
@@ -40,7 +41,7 @@ class Server {
   private async startApolloServer(app: Express, db_connection: MikroORM<IDatabaseDriver<Connection>>) {
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver, ThreadResolver],
+        resolvers: [UserResolver, ThreadResolver, CommentResolver],
         validate: false,
       }),
       context: ({ req, res }): AppContext => {
