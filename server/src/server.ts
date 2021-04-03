@@ -9,6 +9,7 @@ import { UserResolver } from "./resolvers/User";
 import AppContext from "./AppContext";
 import { verifyToken } from "./authentication";
 import { ThreadResolver } from "./resolvers/Thread";
+import cors from "cors";
 
 class Server {
   port: number;
@@ -21,6 +22,7 @@ class Server {
   }
 
   private configMiddleware() {
+    this.app.use(cors());
     this.app.use(morgan(__prod__ ? "common" : "dev"));
   }
 
@@ -55,11 +57,11 @@ class Server {
         const authToken = authHeader?.split(" ")[1];
 
         // no token is provided
-        if (authToken === undefined) return context;
+        if (!authToken) return context;
 
         // check for token validity
         const userId = verifyToken(authToken);
-        if (userId !== null) {
+        if (userId) {
           context.auth.valid = true;
           context.auth.userId = userId;
         }

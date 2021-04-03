@@ -1,0 +1,17 @@
+query Me {
+  me {
+    data {
+      id
+      username
+      createdAt
+      threads {
+        id
+        title
+      }
+      comments {
+        id
+      }
+    }
+    error
+  }
+}

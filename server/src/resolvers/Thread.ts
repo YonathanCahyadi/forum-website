@@ -1,5 +1,5 @@
 import { QueryOrder } from "@mikro-orm/core";
-import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
+import { Arg, ArgsType, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import AppContext from "../AppContext";
 import { Thread } from "../entities/Thread";
 
@@ -12,12 +12,18 @@ class ThreadResponse {
   error?: string;
 }
 
+@ArgsType()
+class GetAllThreadArg {
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
+  page?: number;
+}
+
 @Resolver()
 export class ThreadResolver {
-  private limitPerPage = 2;
+  private limitPerPage = 10;
 
   @Query(() => ThreadResponse)
-  async getAllThread(@Arg("page", { defaultValue: 0 }) page: number, @Ctx() { em }: AppContext): Promise<ThreadResponse> {
+  async getAllThread(@Arg("page", () => Int, { defaultValue: 0 }) page: number, @Ctx() { em }: AppContext): Promise<ThreadResponse> {
     if (page < 0) {
       return {
         error: "Page cannot be less than 0.",

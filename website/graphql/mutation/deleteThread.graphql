@@ -1,0 +1,10 @@
+mutation DeleteThread($threadId: String!) {
+  deleteThread(threadId: $threadId) {
+    data {
+      id
+      title
+      content
+    }
+    error
+  }
+}

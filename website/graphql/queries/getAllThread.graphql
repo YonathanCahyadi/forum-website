@@ -1,0 +1,20 @@
+query GetAllThread($page: Int) {
+  getAllThread(page: $page) {
+    data {
+      id
+      title
+      content
+      updated
+      createdBy {
+        id
+        username
+      }
+      comments {
+        id
+      }
+      createdAt
+      updatedAt
+    }
+    error
+  }
+}
