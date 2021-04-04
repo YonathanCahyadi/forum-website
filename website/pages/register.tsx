@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
-import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import { useRegisterMutation } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
@@ -44,8 +43,8 @@ const Register: React.FC = () => {
             }
 
             if (data) {
-              localStorage.setItem(__userId__, JSON.stringify(data.id));
-              localStorage.setItem(__auth__, JSON.stringify(authorizationToken));
+              sessionStorage.setItem(__userId__, JSON.stringify(data.id));
+              sessionStorage.setItem(__auth__, JSON.stringify(authorizationToken));
               Router.push("/");
             }
           }}

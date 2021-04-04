@@ -1,0 +1,15 @@
+mutation DeleteComment($commentId: String!) {
+  deleteComment(commentId: $commentId) {
+    data {
+      id
+      createdBy {
+        id
+        username
+      }
+      content
+      createdAt
+      updatedAt
+    }
+    error
+  }
+}

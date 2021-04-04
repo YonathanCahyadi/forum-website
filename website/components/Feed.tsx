@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Router from "next/router";
-import { User, useDeleteThreadMutation } from "../graphql/generated/graphql";
+import { useDeleteThreadMutation } from "../graphql/generated/graphql";
 import Button from "./Button";
 
 interface ItemProps {
@@ -10,14 +10,14 @@ interface ItemProps {
   linkOnClick?: string;
 
   createdByUsername: string;
-  owner: boolean;
+  owned: boolean;
 }
 
 const Wraper: React.FC = ({ children }) => {
   return <div className="feeds">{children}</div>;
 };
 
-const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owner, date, linkOnClick }) => {
+const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, linkOnClick }) => {
   const [deleteThread] = useDeleteThreadMutation();
 
   return (
@@ -26,19 +26,23 @@ const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owner, date, 
         <sub>{date.toDateString()}</sub>
         <h2>{title}</h2>
         <sub>{createdByUsername}</sub>
-        {owner && (
-          <div>
-            <>
-              <Button name="Update" />
-              <Button
-                name="Delete"
-                onClick={(e) => {
-                  deleteThread({ variables: { threadId: id } });
-                  e.preventDefault();
-                  Router.reload();
-                }}
-              />
-            </>
+
+        {owned && (
+          <div className="feed-action-buttons-container">
+            <Button
+              name="Edit"
+              onClick={async (e) => {
+                e.preventDefault();
+              }}
+            />
+            <Button
+              name="Delete"
+              onClick={async (e) => {
+                const { data } = await deleteThread({ variables: { threadId: id } });
+                e.preventDefault();
+                Router.reload();
+              }}
+            />
           </div>
         )}
       </div>

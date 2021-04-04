@@ -1,0 +1,12 @@
+mutation UpdateComment($commentId: String!, $newContent: String!) {
+  updateComment(commentId: $commentId, newContent: $newContent) {
+    data {
+      id
+      content
+      updated
+      createdAt
+      updatedAt
+    }
+    error
+  }
+}
