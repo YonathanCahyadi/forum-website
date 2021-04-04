@@ -12,12 +12,6 @@ class ThreadResponse {
   error?: string;
 }
 
-@ArgsType()
-class GetAllThreadArg {
-  @Field(() => Int, { nullable: true, defaultValue: 0 })
-  page?: number;
-}
-
 @Resolver()
 export class ThreadResolver {
   private limitPerPage = 10;
@@ -47,6 +41,13 @@ export class ThreadResolver {
   @Query(() => ThreadResponse)
   async getThreadById(@Arg("threadId") threadId: string, @Ctx() { em }: AppContext): Promise<ThreadResponse> {
     const threads = await em.find(Thread, { id: threadId, deleted: false }, ["createdBy", "comments"]);
+
+    if (threads.length === 0) {
+      return {
+        error: "Thread not found",
+      };
+    }
+
     return {
       data: threads,
     };
@@ -86,8 +87,14 @@ export class ThreadResolver {
       };
     }
 
-    // check if the updated post is made by the same authenticated user
-    const post = await em.findOne(Thread, { id: threadId }, ["createdBy"]);
+    // check if the updated post is made by the same authenticated user and the post is exists
+    const post = await em.findOne(Thread, { id: threadId, deleted: false }, ["createdBy"]);
+    if (!post) {
+      return {
+        error: "Invalid operation (Thread not found).",
+      };
+    }
+
     if (post?.createdBy.id !== auth.userId) {
       return {
         error: "Invalid operation (Update can only be done by the owner of the thread).",
@@ -95,13 +102,16 @@ export class ThreadResolver {
     }
 
     // update the post
-    await em.nativeUpdate(Thread, { id: threadId, deleted: false }, { title, content, updated: true });
+    post.content = content;
+    post.updated = true;
 
-    // get the new post
-    const newPost = await em.find(Thread, { id: threadId }, ["createdBy", "comments"]);
+    await em.flush();
+
+    // get the updated post
+    const updatedPost = await em.find(Thread, { id: threadId }, ["createdBy", "comments"]);
 
     return {
-      data: newPost,
+      data: updatedPost,
     };
   }
 

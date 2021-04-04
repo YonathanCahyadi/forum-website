@@ -18,11 +18,9 @@ type verifiedPayload = {
 export const verifyToken = (token: string) => {
   try {
     const decoded = JWT.verify(token, __jwt_secret__, { algorithms: [algorithm] }) as verifiedPayload;
-    console.log(`decoded: ${decoded[payloadName]}`);
 
     return decoded[payloadName];
   } catch (err) {
-    console.log(err);
     return null;
   }
 };

@@ -42,6 +42,11 @@ export class UserResolver {
     };
   }
 
+  private async populateUsersForeignEntity(user: User) {
+    await user.threads.init({ where: { deleted: false } });
+    await user.comments.init({ where: { deleted: false } });
+  }
+
   // get the current user based on the authorization token
   @Query(() => UserResponse)
   async me(@Ctx() { em, auth }: AppContext): Promise<UserResponse> {
@@ -51,16 +56,18 @@ export class UserResolver {
       };
     }
 
-    const users = await em.find(User, { id: auth.userId }, ["threads", "comments"]);
-    console.log(users);
-    if (users.length === 0) {
+    const user = await em.findOne(User, { id: auth.userId });
+    if (!user) {
       return {
         error: "User not Found.",
       };
     }
 
+    // populate users comments and thread
+    await this.populateUsersForeignEntity(user);
+
     return {
-      data: users[0],
+      data: user,
     };
   }
 
@@ -80,15 +87,18 @@ export class UserResolver {
       };
     }
 
-    const users = await em.find(User, { id }, ["threads", "comments"]);
-    if (users.length === 0) {
+    const user = await em.findOne(User, { id });
+    if (!user) {
       return {
         error: "User not found.",
       };
     }
 
+    // populate users comments and thread
+    await this.populateUsersForeignEntity(user);
+
     return {
-      data: users[0],
+      data: user,
     };
   }
 
@@ -109,15 +119,18 @@ export class UserResolver {
     }
 
     // check if user exist
-    const users = await em.find(User, { username }, ["threads", "comments"]);
-    if (users.length === 0) {
+    const user = await em.findOne(User, { username });
+    if (!user) {
       return {
         error: "User Not Found.",
       };
     }
 
+    // populate users comments and thread
+    await this.populateUsersForeignEntity(user);
+
     return {
-      data: users[0],
+      data: user,
     };
   }
 
@@ -132,9 +145,9 @@ export class UserResolver {
     }
 
     // check if username already registered
-    const user = await em.find(User, { username }, ["threads", "comments"]);
+    const user = await em.findOne(User, { username });
     // user already registered
-    if (user.length !== 0) {
+    if (user) {
       return {
         error: "User already registered",
       };
@@ -146,6 +159,9 @@ export class UserResolver {
     await em.persistAndFlush(newUser);
 
     const result = (await em.find(User, { id: newUser.id }))[0];
+
+    // populate users comments and thread
+    await this.populateUsersForeignEntity(result);
 
     // generate new Auth Token
     const authorizationToken = createToken(newUser.id);
@@ -163,61 +179,31 @@ export class UserResolver {
       };
     }
 
-    const usersWithSameUsername = await em.find(User, { username }, ["threads", "comments"]);
+    const usersWithSameUsername = await em.findOne(User, { username }, ["threads", "comments"]);
     // check if user exists
-    if (usersWithSameUsername.length === 0) {
+    if (!usersWithSameUsername) {
       return {
         error: "User doesn't exists.",
       };
     }
 
-    const user = usersWithSameUsername[0];
     // check if password is valid
-    const validPassword = await argon2.verify(user.password, password);
+    const validPassword = await argon2.verify(usersWithSameUsername.password, password);
     if (!validPassword) {
       return {
         error: "Invalid Password.",
       };
     }
 
+    // populate users comments and thread
+    await this.populateUsersForeignEntity(usersWithSameUsername);
+
     // create authorization token
-    const authorizationToken = createToken(user.id);
+    const authorizationToken = createToken(usersWithSameUsername.id);
 
     return {
-      data: user,
+      data: usersWithSameUsername,
       authorizationToken,
     };
   }
-
-  //   @Mutation(() => UserResponse)
-  //   async updateUser(@Arg("id") id: string, @Ctx() { em, auth }: AppContext): Promise<UserResponse> {
-  //     if (!auth.valid) {
-  //       return {
-  //         error: "Not Authorized (please check your authorization token)."
-  //       };
-  //     }
-
-  //     // check if id is valid
-  //     if (id.length < 0) {
-  //       return {
-  //         error: "Invalid Id."
-  //       };
-  //     }
-
-  //     // check if user exist
-  //     const usersWithSameId = await em.find(User, { id });
-  //     if (usersWithSameId.length === 0) {
-  //       return {
-  //         error: "User Not Found."
-  //       };
-  //     }
-
-  //     const user = usersWithSameId[0];
-
-  //     // check if user is authorized to update the profile
-  //     if((user.id === auth.userId) && (user.id === id)) {
-  //         // update the user profile
-
-  //     }
-  //   }
 }

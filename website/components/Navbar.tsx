@@ -29,8 +29,8 @@ const Navbar: React.FC = () => {
               <Button
                 name="Logout"
                 onClick={() => {
-                  // clear the local storage and refresh the pages
-                  localStorage.clear();
+                  // clear the session storage and refresh the pages
+                  sessionStorage.clear();
                   Router.reload();
                 }}
               />

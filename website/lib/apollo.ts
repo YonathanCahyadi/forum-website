@@ -8,7 +8,7 @@ const client = () => {
       uri: "http://192.168.1.110:3001/graphql",
       headers: {
         Authorization:
-          typeof window === "undefined" ? null : localStorage.getItem("auth") ? "Bearer " + JSON.parse(localStorage.getItem("auth")) : null,
+          typeof window === "undefined" ? null : sessionStorage.getItem("auth") ? "Bearer " + JSON.parse(sessionStorage.getItem("auth")) : null,
       },
     }),
     cache: new InMemoryCache(),

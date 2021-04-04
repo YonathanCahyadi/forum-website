@@ -1,18 +1,14 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Comment from "../../components/Comment";
-import {
-  GetThreadByIdDocument,
-  GetThreadByIdQuery,
-  Thread,
-  useGetCommentsByThreadIdQuery,
-  usePostCommentMutation,
-} from "../../graphql/generated/graphql";
+import { GetThreadByIdDocument, GetThreadByIdQuery, Thread, useGetCommentsByThreadIdQuery } from "../../graphql/generated/graphql";
 import client from "../../lib/apollo";
 import withAppoloProvider from "../../lib/withApolloProvider";
+
+import { __auth__, __userId__ } from "../../constants";
+
+import Head from "next/head";
 import { useEffect, useState } from "react";
-import { __auth__ } from "../../constants";
-import Spinner from "../../components/Spinner";
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const id = ctx.params.id as string;
@@ -35,41 +31,64 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = ({ threadData }) => {
   const { data: commentDatas, loading: commentLoading } = useGetCommentsByThreadIdQuery({ variables: { threadId: threadData.id } });
+  const [userId, setUserId] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
+
+  useEffect(() => {
+    setUserId(JSON.parse(sessionStorage.getItem(__userId__)));
+    setAuthToken(JSON.parse(sessionStorage.getItem(__auth__)));
+  });
 
   if (!threadData) {
     return <div>Error</div>;
   }
 
   return (
-    <div className="thread">
-      <div className="thread-content">
-        <sub>{threadData.createdBy.username}</sub>
+    <>
+      <Head>
+        <meta name="title" content={`${threadData.title}`} />
+        <meta name="description" content={`${threadData.content.slice(0, 49)}`} />
+        <meta name="keywords" content={`${threadData.title.split(" ")}`} />
+        <meta name="robots" content="index, follow" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="English" />
 
-        <h1>{threadData.title}</h1>
+        <title>{threadData.title}</title>
+      </Head>
 
-        <sub>
-          {new Date(threadData.createdAt).toDateString()} {threadData.updated && <pre>| updated</pre>}
-        </sub>
+      <div className="thread">
+        <div className="thread-content">
+          <sub>{threadData.createdBy.username}</sub>
 
-        <main>{threadData.content}</main>
-        <Comment.Wrapper loading={commentLoading}>
-          {commentDatas?.getCommentsByThreadId.data.length === 0 ? (
-            <div>No Comment</div>
-          ) : (
-            commentDatas?.getCommentsByThreadId.data.map((comment) => (
-              <Comment.Item
-                key={`comment-${comment.id}`}
-                username={comment.createdBy.username}
-                content={comment.content}
-                createdAt={comment.createdAt}
-              />
-            ))
-          )}
+          <h1>{threadData.title}</h1>
 
-          <Comment.Post threadId={threadData.id} />
-        </Comment.Wrapper>
+          <sub>
+            {new Date(threadData.createdAt).toDateString()} {threadData.updated && <pre>| updated</pre>}
+          </sub>
+
+          <main>{threadData.content}</main>
+          <Comment.Wrapper loading={commentLoading}>
+            {commentDatas?.getCommentsByThreadId.data.length === 0 ? (
+              <Comment.Blank />
+            ) : (
+              commentDatas?.getCommentsByThreadId.data.map((comment) => (
+                <Comment.Item
+                  key={`comment-${comment.id}`}
+                  id={comment.id}
+                  username={comment.createdBy.username}
+                  content={comment.content}
+                  createdAt={new Date(comment.createdAt)}
+                  owned={comment.createdBy.id === userId}
+                  edited={comment.updated}
+                />
+              ))
+            )}
+
+            <Comment.Post threadId={threadData.id} loggedIn={authToken !== null} />
+          </Comment.Wrapper>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

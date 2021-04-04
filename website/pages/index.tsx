@@ -6,10 +6,10 @@ import withApolloProvider from "../lib/withApolloProvider";
 
 const Home: React.FC = () => {
   const { data, error, loading, fetchMore, variables } = useGetAllThreadQuery({ variables: { page: 0 } });
-
   const [userId, setUserId] = useState(null);
+
   useEffect(() => {
-    setUserId(JSON.parse(localStorage.getItem(__userId__)));
+    setUserId(JSON.parse(sessionStorage.getItem(__userId__)));
   });
 
   if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
               date={new Date(d.updatedAt)}
               title={d.title}
               createdByUsername={d.createdBy.username}
-              owner={d.createdBy.id === userId}
+              owned={d.createdBy.id === userId}
             />
           ))}
       </Feed.Wraper>
