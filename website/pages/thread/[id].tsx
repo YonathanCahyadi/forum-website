@@ -50,7 +50,7 @@ const Post: React.FC<PostProps> = ({ threadData }) => {
         <meta name="description" content={`${threadData.content.slice(0, 49)}`} />
         <meta name="keywords" content={`${threadData.title.split(" ")}`} />
         <meta name="robots" content="index, follow" />
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="language" content="English" />
 
         <title>{threadData.title}</title>
