@@ -4,7 +4,7 @@ import Router from "next/router";
 import Button from "../components/Button";
 import { useRegisterMutation } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
-import { __auth__, __userId__ } from "../constants";
+import { __auth__, __userId__, __user__ } from "../constants";
 
 const Register: React.FC = () => {
   const [register] = useRegisterMutation();
@@ -44,6 +44,7 @@ const Register: React.FC = () => {
 
             if (data) {
               sessionStorage.setItem(__userId__, JSON.stringify(data.id));
+              sessionStorage.setItem(__user__, JSON.stringify(data.username));
               sessionStorage.setItem(__auth__, JSON.stringify(authorizationToken));
               Router.push("/");
             }

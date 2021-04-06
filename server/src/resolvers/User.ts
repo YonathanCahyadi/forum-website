@@ -72,14 +72,7 @@ export class UserResolver {
   }
 
   @Query(() => UserResponse)
-  async getUserById(@Arg("id") id: string, @Ctx() { em, auth }: AppContext): Promise<UserResponse> {
-    // check if user is authorized
-    if (!auth.valid) {
-      return {
-        error: "Not Authorized (please check your authorization token).",
-      };
-    }
-
+  async getUserById(@Arg("id") id: string, @Ctx() { em }: AppContext): Promise<UserResponse> {
     // check if id is valid
     if (id.length < 0) {
       return {
@@ -103,14 +96,7 @@ export class UserResolver {
   }
 
   @Query(() => UserResponse)
-  async getUserByUsername(@Arg("usename") username: string, @Ctx() { em, auth }: AppContext): Promise<UserResponse> {
-    // check if user is authorized
-    if (!auth.valid) {
-      return {
-        error: "Not Authorized (please check your authorization token).",
-      };
-    }
-
+  async getUserByUsername(@Arg("usename") username: string, @Ctx() { em }: AppContext): Promise<UserResponse> {
     //check if inputed username is a valid username
     if (username.length < this.MIN_USERNAME_LENGTH) {
       return {

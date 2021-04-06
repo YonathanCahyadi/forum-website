@@ -15,6 +15,12 @@
     background-color: rgb(209, 209, 209);
     border-radius: 1em;
 
+    .thread-username {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
     sub {
       color: rgb(83, 83, 83);
 
@@ -28,6 +34,11 @@
       display: flex;
       overflow: visible;
       margin: 0.5em;
+    }
+
+    .thread-comments {
+      border-top: 1px solid black;
+      margin-top: 2em;
     }
   }
 }

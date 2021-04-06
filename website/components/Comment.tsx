@@ -7,12 +7,13 @@ import Spinner from "./Spinner";
 
 interface CommentsWrapperProps {
   loading: boolean;
+  heading: boolean;
 }
 
-const Wrapper: React.FC<CommentsWrapperProps> = ({ children, loading }) => {
+const Wrapper: React.FC<CommentsWrapperProps> = ({ children, heading, loading }) => {
   return (
     <div className="comments-container">
-      <h3>Comments</h3>
+      {heading && <h3>Comments</h3>}
       {loading ? (
         <div className="comments-loading">
           <Spinner />
@@ -31,9 +32,10 @@ interface CommentsItemProps {
   createdAt: Date;
   owned: boolean;
   edited: boolean;
+  creatorId: string;
 }
 
-const Item: React.FC<CommentsItemProps> = ({ username, content, createdAt, owned, id, edited }) => {
+const Item: React.FC<CommentsItemProps> = ({ username, content, createdAt, owned, id, edited, creatorId }) => {
   const [deleteComment] = useDeleteCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
 
@@ -42,7 +44,9 @@ const Item: React.FC<CommentsItemProps> = ({ username, content, createdAt, owned
 
   return (
     <div className="comment">
-      <h5>{username}</h5>
+      <Link href={`/user/${creatorId}`}>
+        <h5 className="comment-username">{username}</h5>
+      </Link>
       <sub>
         {createdAt.toDateString()} {edited && "| edited"}
       </sub>
@@ -79,7 +83,7 @@ const Item: React.FC<CommentsItemProps> = ({ username, content, createdAt, owned
                   }
 
                   if (data.updateComment.data) {
-                    Router.reload();
+                    setUpdating(false);
                   }
                 }}
               />

@@ -4,6 +4,7 @@ import "../styles/HomePage.scss";
 import "../styles/ThreadPage.scss";
 import "../styles/LoginPage.scss";
 import "../styles/ThreadPostPage.scss";
+import "../styles/UserPage.scss";
 
 import "../styles/Feed.scss";
 import "../styles/Button.scss";

@@ -9,6 +9,8 @@ import { __auth__, __userId__ } from "../../constants";
 
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import Router from "next/router";
+import Link from "next/link";
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const id = ctx.params.id as string;
@@ -20,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
 
   return {
     props: {
-      threadData: data.getThreadById.data[0] || null,
+      threadData: data.getThreadById.data[0],
     },
   };
 };
@@ -58,7 +60,9 @@ const Post: React.FC<PostProps> = ({ threadData }) => {
 
       <div className="thread">
         <div className="thread-content">
-          <sub>{threadData.createdBy.username}</sub>
+          <Link href={`/user/${threadData.createdBy.id}`}>
+            <sub className="thread-username">{threadData.createdBy.username}</sub>
+          </Link>
 
           <h1>{threadData.title}</h1>
 
@@ -67,25 +71,29 @@ const Post: React.FC<PostProps> = ({ threadData }) => {
           </sub>
 
           <main>{threadData.content}</main>
-          <Comment.Wrapper loading={commentLoading}>
-            {commentDatas?.getCommentsByThreadId.data.length === 0 ? (
-              <Comment.Blank />
-            ) : (
-              commentDatas?.getCommentsByThreadId.data.map((comment) => (
-                <Comment.Item
-                  key={`comment-${comment.id}`}
-                  id={comment.id}
-                  username={comment.createdBy.username}
-                  content={comment.content}
-                  createdAt={new Date(comment.createdAt)}
-                  owned={comment.createdBy.id === userId}
-                  edited={comment.updated}
-                />
-              ))
-            )}
 
-            <Comment.Post threadId={threadData.id} loggedIn={authToken !== null} />
-          </Comment.Wrapper>
+          <div className="thread-comments">
+            <Comment.Wrapper heading={true} loading={commentLoading}>
+              {commentDatas?.getCommentsByThreadId.data.length === 0 ? (
+                <Comment.Blank />
+              ) : (
+                commentDatas?.getCommentsByThreadId.data.map((comment) => (
+                  <Comment.Item
+                    key={`comment-${comment.id}`}
+                    id={comment.id}
+                    username={comment.createdBy.username}
+                    content={comment.content}
+                    createdAt={new Date(comment.createdAt)}
+                    owned={comment.createdBy.id === userId}
+                    edited={comment.updated}
+                    creatorId={comment.createdBy.id}
+                  />
+                ))
+              )}
+
+              <Comment.Post threadId={threadData.id} loggedIn={authToken !== null} />
+            </Comment.Wrapper>
+          </div>
         </div>
       </div>
     </>
