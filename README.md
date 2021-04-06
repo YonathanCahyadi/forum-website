@@ -18,7 +18,7 @@ This is project made by Yonathan Cahyadi. This project goal is to make a Simple 
 - [x] Login for registered user
 - [x] Add new Thread
 - [x] Delete Thread
-- [ ] Edit Thread
+- [x] Edit Thread
 - [x] View Current User Profile
 - [x] View Other User Profile
 - [x] Add Comments
@@ -76,7 +76,7 @@ First we need to start the **Server**, to do this we can go to the server direct
         
         npm run dev
 
-**P.S** To open the apollo server sandbox go to **http://localhost:PORT/graphql**
+**P.S** To open the apollo server sandbox go to **http://localhost:PORT/graphql**, this only work if the NODE_ENV is on **development**.
 ## Running the Website
 After we start up the server using the instruction listed above, we now can start the **Website** web server, to do this we need to go to the website directory adn do the following step:
     

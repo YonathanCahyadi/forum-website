@@ -1,5 +1,6 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import Comment from "../../components/Comment";
 import Feed from "../../components/Feed";
@@ -39,70 +40,83 @@ const UserPage: React.FC<UserPageProps> = ({ userData }) => {
   });
 
   return (
-    <div className="user-layout">
-      {/* <pre>{JSON.stringify(userData, null, 2)}</pre> */}
+    <>
+      <Head>
+        <meta name="title" content={`${userData.username}`} />
+        <meta name="description" content={`User Profile of ${userData.username}`} />
+        <meta name="keywords" content={`${userData} Profile`} />
+        <meta name="robots" content="index, follow" />
+        <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="English" />
 
-      <fieldset className="user-threads-container">
-        <legend>Posted Threads</legend>
-        <Feed.Wraper>
-          {userData.threads.length !== 0 ? (
-            userData.threads.map((thread) => (
-              <Feed.Item
-                key={`thread-${thread.id}`}
-                title={thread.title}
-                createdByUsername={userData.username}
-                id={thread.id}
-                date={new Date(thread.createdAt)}
-                owned={userId === userData.id}
-                linkOnClick={`/thread/${thread.id}`}
-              />
-            ))
-          ) : (
-            <div>No Thread</div>
-          )}
-        </Feed.Wraper>
-      </fieldset>
+        <title>{`${userData.username} User Profile`}</title>
+      </Head>
+      <div className="user-layout">
+        {/* <pre>{JSON.stringify(userData, null, 2)}</pre> */}
 
-      <fieldset className="user-comments-container">
-        <legend>Posted Comments</legend>
-        <Comment.Wrapper heading={false} loading={false}>
-          {userData.comments.length !== 0 ? (
-            userData.comments.map((comment) => (
-              <Comment.Item
-                owned={userId === userData.id}
-                key={`comment-${comment.id}`}
-                edited={comment.updated}
-                content={comment.content}
-                id={comment.id}
-                createdAt={new Date(comment.createdAt)}
-                username={userData.username}
-                creatorId={userData.id}
-              />
-            ))
-          ) : (
-            <Comment.Blank />
-          )}
-        </Comment.Wrapper>
-      </fieldset>
+        <fieldset className="user-threads-container">
+          <legend>Posted Threads</legend>
+          <Feed.Wraper>
+            {userData.threads.length !== 0 ? (
+              userData.threads.map((thread) => (
+                <Feed.Item
+                  key={`thread-${thread.id}`}
+                  title={thread.title}
+                  createdByUsername={userData.username}
+                  id={thread.id}
+                  date={new Date(thread.createdAt)}
+                  owned={userId === userData.id}
+                  linkOnClick={`/thread/${thread.id}`}
+                  edited={thread.updated}
+                />
+              ))
+            ) : (
+              <div>No Thread</div>
+            )}
+          </Feed.Wraper>
+        </fieldset>
 
-      <div className="user-infos-container">
-        <h2>{userData.username}</h2>
-        <div className="user-infos">
-          <div className="user-info">
-            <h5>Created At:</h5>
-            <div className="user-info-ans">{new Date(userData.createdAt).toDateString()} </div>
-          </div>
-          <div className="user-info">
-            <h5>Threads Count: </h5>
-            <div className="user-info-ans">{userData.threads.length}</div>
-          </div>
-          <div className="user-info">
-            <h5>Comments Count: </h5>
-            <div className="user-info-ans">{userData.comments.length}</div>
+        <fieldset className="user-comments-container">
+          <legend>Posted Comments</legend>
+          <Comment.Wrapper heading={false} loading={false}>
+            {userData.comments.length !== 0 ? (
+              userData.comments.map((comment) => (
+                <Comment.Item
+                  owned={userId === userData.id}
+                  key={`comment-${comment.id}`}
+                  edited={comment.updated}
+                  content={comment.content}
+                  id={comment.id}
+                  createdAt={new Date(comment.createdAt)}
+                  username={userData.username}
+                  creatorId={userData.id}
+                />
+              ))
+            ) : (
+              <Comment.Blank />
+            )}
+          </Comment.Wrapper>
+        </fieldset>
+
+        <div className="user-infos-container">
+          <h2>{userData.username}</h2>
+          <div className="user-infos">
+            <div className="user-info">
+              <h5>Created At:</h5>
+              <div className="user-info-ans">{new Date(userData.createdAt).toDateString()} </div>
+            </div>
+            <div className="user-info">
+              <h5>Threads Count: </h5>
+              <div className="user-info-ans">{userData.threads.length}</div>
+            </div>
+            <div className="user-info">
+              <h5>Comments Count: </h5>
+              <div className="user-info-ans">{userData.comments.length}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

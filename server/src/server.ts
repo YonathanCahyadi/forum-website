@@ -79,13 +79,13 @@ class Server {
     return new Promise(async (resolve, reject) => {
       const databaseConnection = await this.connectToDatabase();
 
-      await this.startApolloServer(this.app, databaseConnection);
-
-      this.app
-        .listen(this.port, () => {
-          resolve(this.port);
-        })
-        .on("error", (err) => reject(err.message));
+      this.startApolloServer(this.app, databaseConnection).then(() => {
+        this.app
+          .listen(this.port, () => {
+            resolve(this.port);
+          })
+          .on("error", (err) => reject(err.message));
+      });
     });
   }
 }

@@ -48,7 +48,7 @@ const Item: React.FC<CommentsItemProps> = ({ username, content, createdAt, owned
         <h5 className="comment-username">{username}</h5>
       </Link>
       <sub>
-        {createdAt.toDateString()} {edited && "| edited"}
+        {createdAt.toDateString()} {edited && <pre>| edited</pre>}
       </sub>
       {/* <div className="comment-content">{content}</div> */}
       <textarea className="comment-content" value={value} disabled={!updating} onChange={(e) => setValue(e.currentTarget.value)} />

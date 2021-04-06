@@ -30,10 +30,34 @@
       }
     }
 
+    h1 {
+      textarea {
+        min-height: 3em;
+        min-width: 100%;
+
+        &:disabled {
+          background-color: rgb(209, 209, 209);
+          color: black;
+          border: none;
+        }
+      }
+    }
+
     main {
       display: flex;
       overflow: visible;
       margin: 0.5em;
+
+      textarea {
+        min-height: 50em;
+        min-width: 100%;
+
+        &:disabled {
+          background-color: rgb(209, 209, 209);
+          color: black;
+          border: none;
+        }
+      }
     }
 
     .thread-comments {

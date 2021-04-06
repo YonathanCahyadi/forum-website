@@ -309,6 +309,25 @@ export type UpdateCommentMutation = (
   ) }
 );
 
+export type UpdateThreadMutationVariables = Exact<{
+  threadId: Scalars['String'];
+  title: Scalars['String'];
+  content: Scalars['String'];
+}>;
+
+
+export type UpdateThreadMutation = (
+  { __typename?: 'Mutation' }
+  & { updateThread: (
+    { __typename?: 'ThreadResponse' }
+    & Pick<ThreadResponse, 'error'>
+    & { data?: Maybe<Array<(
+      { __typename?: 'Thread' }
+      & Pick<Thread, 'id' | 'content' | 'title'>
+    )>> }
+  ) }
+);
+
 export type GetAllThreadQueryVariables = Exact<{
   page?: Maybe<Scalars['Int']>;
 }>;
@@ -726,6 +745,46 @@ export function useUpdateCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateCommentMutation>;
 export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
 export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
+export const UpdateThreadDocument = gql`
+    mutation UpdateThread($threadId: String!, $title: String!, $content: String!) {
+  updateThread(threadId: $threadId, title: $title, content: $content) {
+    data {
+      id
+      content
+      title
+    }
+    error
+  }
+}
+    `;
+export type UpdateThreadMutationFn = Apollo.MutationFunction<UpdateThreadMutation, UpdateThreadMutationVariables>;
+
+/**
+ * __useUpdateThreadMutation__
+ *
+ * To run a mutation, you first call `useUpdateThreadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateThreadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateThreadMutation, { data, loading, error }] = useUpdateThreadMutation({
+ *   variables: {
+ *      threadId: // value for 'threadId'
+ *      title: // value for 'title'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useUpdateThreadMutation(baseOptions?: Apollo.MutationHookOptions<UpdateThreadMutation, UpdateThreadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateThreadMutation, UpdateThreadMutationVariables>(UpdateThreadDocument, options);
+      }
+export type UpdateThreadMutationHookResult = ReturnType<typeof useUpdateThreadMutation>;
+export type UpdateThreadMutationResult = Apollo.MutationResult<UpdateThreadMutation>;
+export type UpdateThreadMutationOptions = Apollo.BaseMutationOptions<UpdateThreadMutation, UpdateThreadMutationVariables>;
 export const GetAllThreadDocument = gql`
     query GetAllThread($page: Int) {
   getAllThread(page: $page) {
