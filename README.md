@@ -13,6 +13,18 @@ This is project made by Yonathan Cahyadi. This project goal is to make a Simple 
 - Database:
   - Postgres
 
+# Implemented Feature
+- [x] Register new user
+- [x] Login for registered user
+- [x] Add new Thread
+- [x] Delete Thread
+- [ ] Edit Thread
+- [x] View Current User Profile
+- [x] View Other User Profile
+- [x] Add Comments
+- [x] Delete Comments
+- [x] Edit Comments 
+
 # How to Run
 ## Running the Server
 First we need to start the **Server**, to do this we can go to the server directory and follow the following steps:
@@ -64,6 +76,7 @@ First we need to start the **Server**, to do this we can go to the server direct
         
         npm run dev
 
+**P.S** To open the apollo server sandbox go to **http://localhost:PORT/graphql**
 ## Running the Website
 After we start up the server using the instruction listed above, we now can start the **Website** web server, to do this we need to go to the website directory adn do the following step:
     
