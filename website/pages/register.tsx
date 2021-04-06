@@ -4,7 +4,7 @@ import Router from "next/router";
 import Button from "../components/Button";
 import { useRegisterMutation } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
-import { __auth__, __userId__, __user__ } from "../constants";
+import { __auth__, __userId__, __user__ } from "../env";
 
 const Register: React.FC = () => {
   const [register] = useRegisterMutation();

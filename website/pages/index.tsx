@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Feed from "../components/Feed";
-import { __userId__ } from "../constants";
+import { __userId__ } from "../env";
 import { useGetAllThreadQuery } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
 

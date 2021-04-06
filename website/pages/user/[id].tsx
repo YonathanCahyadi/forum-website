@@ -3,7 +3,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
 import Comment from "../../components/Comment";
 import Feed from "../../components/Feed";
-import { __userId__ } from "../../constants";
+import { __userId__ } from "../../env";
 import { GetUserByIdDocument, GetUserByIdQuery, User } from "../../graphql/generated/graphql";
 import client from "../../lib/apollo";
 import withApolloProvider from "../../lib/withApolloProvider";

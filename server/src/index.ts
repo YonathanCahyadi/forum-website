@@ -1,6 +1,7 @@
+import { __port__ } from "./env";
 import Server from "./server";
 
-const server = new Server(3001);
+const server = new Server(__port__);
 
 server
   .start()

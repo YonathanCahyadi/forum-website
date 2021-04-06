@@ -5,7 +5,7 @@ import { GetThreadByIdDocument, GetThreadByIdQuery, Thread, useGetCommentsByThre
 import client from "../../lib/apollo";
 import withAppoloProvider from "../../lib/withApolloProvider";
 
-import { __auth__, __userId__ } from "../../constants";
+import { __auth__, __userId__ } from "../../env";
 
 import Head from "next/head";
 import { useEffect, useState } from "react";

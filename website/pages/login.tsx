@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import { useLoginMutation } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
 import Link from "next/link";
-import { __auth__, __userId__, __user__ } from "../constants";
+import { __auth__, __userId__, __user__ } from "../env";
 
 const Login: React.FC = () => {
   const [login] = useLoginMutation();

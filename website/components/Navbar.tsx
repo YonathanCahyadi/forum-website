@@ -3,7 +3,7 @@ import Router from "next/router";
 import withApolloProvider from "../lib/withApolloProvider";
 import Button from "./Button";
 import { useEffect, useState } from "react";
-import { __auth__, __userId__, __user__ } from "../constants";
+import { __auth__, __userId__, __user__ } from "../env";
 
 const Navbar: React.FC = () => {
   const [user, setUser] = useState(null);

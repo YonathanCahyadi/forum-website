@@ -1,11 +1,11 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
+import { __graphql_server_url__ } from "../env";
 
 const client = () => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: createHttpLink({
-      uri: "http://192.168.1.110:3001/graphql",
+      uri: __graphql_server_url__,
       headers: {
         Authorization:
           typeof window === "undefined" ? null : sessionStorage.getItem("auth") ? "Bearer " + JSON.parse(sessionStorage.getItem("auth")) : null,
