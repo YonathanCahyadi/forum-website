@@ -1,6 +1,7 @@
 import { QueryOrder } from "@mikro-orm/core";
 import { Arg, ArgsType, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import AppContext from "../AppContext";
+import { Comment } from "../entities/Comment";
 import { Thread } from "../entities/Thread";
 
 @ObjectType()
@@ -123,22 +124,29 @@ export class ThreadResolver {
       };
     }
 
-    // check if the updated post is made by the same authenticated user
-    const post = await em.findOne(Thread, { id: threadId }, ["createdBy"]);
-    if (post?.createdBy.id !== auth.userId) {
+    // check if the updated thread is made by the same authenticated user
+    const thread = await em.findOne(Thread, { id: threadId }, ["createdBy"]);
+
+    if (!thread) {
+      return {
+        error: "Invalid operation (Thread not found).",
+      };
+    }
+
+    if (thread?.createdBy.id !== auth.userId) {
       return {
         error: "Invalid operation (Delete can only be done by the owner of the thread).",
       };
     }
 
-    // delete post
+    // delete thread
     await em.nativeUpdate(Thread, { id: threadId, deleted: false }, { deleted: true });
 
-    // get the deleted thread
-    const deletedThread = await em.find(Thread, { id: threadId, deleted: true }, ["createdBy", "comments"]);
+    // delete comment on related to the thread
+    await em.nativeUpdate(Comment, { post: threadId }, { deleted: true });
 
     return {
-      data: deletedThread,
+      data: [thread],
     };
   }
 }

@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import { useLoginMutation } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
 import Link from "next/link";
-import { __auth__, __userId__ } from "../constants";
+import { __auth__, __userId__, __user__ } from "../constants";
 
 const Login: React.FC = () => {
   const [login] = useLoginMutation();
@@ -45,6 +45,7 @@ const Login: React.FC = () => {
             if (data) {
               sessionStorage.setItem(__userId__, JSON.stringify(data.id));
               sessionStorage.setItem(__auth__, JSON.stringify(authorizationToken));
+              sessionStorage.setItem(__user__, JSON.stringify(data.username));
               Router.push("/");
             }
           }}

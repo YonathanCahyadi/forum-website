@@ -1,11 +1,20 @@
 import Link from "next/link";
 import Router from "next/router";
 import withApolloProvider from "../lib/withApolloProvider";
-import { useMeQuery } from "../graphql/generated/graphql";
 import Button from "./Button";
+import { useEffect, useState } from "react";
+import { __auth__, __userId__, __user__ } from "../constants";
 
 const Navbar: React.FC = () => {
-  const { data, error } = useMeQuery();
+  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
+
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem(__user__)));
+    setUserId(JSON.parse(sessionStorage.getItem(__userId__)));
+    setAuthToken(JSON.parse(sessionStorage.getItem(__auth__)));
+  });
 
   return (
     <nav>
@@ -13,7 +22,7 @@ const Navbar: React.FC = () => {
         <h1>Forum</h1>
       </Link>
       <ul>
-        {data?.me.data ? (
+        {user && userId && authToken ? (
           <>
             <li>
               <Link href="/thread">
@@ -21,8 +30,8 @@ const Navbar: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/login">
-                <Button name={data.me.data.username} />
+              <Link href={`/user/${userId}`}>
+                <Button name={user} />
               </Link>
             </li>
             <li>
@@ -31,7 +40,7 @@ const Navbar: React.FC = () => {
                 onClick={() => {
                   // clear the session storage and refresh the pages
                   sessionStorage.clear();
-                  Router.reload();
+                  Router.push("/");
                 }}
               />
             </li>

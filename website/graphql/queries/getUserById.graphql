@@ -1,0 +1,26 @@
+query GetUserById($userId: String!) {
+  getUserById(id: $userId) {
+    data {
+      id
+      username
+      createdAt
+      updatedAt
+      threads {
+        id
+        title
+        content
+        createdAt
+        updatedAt
+        updated
+      }
+      comments {
+        id
+        content
+        createdAt
+        updatedAt
+        updated
+      }
+    }
+    error
+  }
+}

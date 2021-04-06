@@ -1,0 +1,55 @@
+.user-layout {
+  outline: 1px solid red;
+
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 0.5fr 0.3fr;
+  grid-template-rows: 0.1fr 250px 250px 500px auto;
+
+  grid-row-gap: 50px;
+  grid-column-gap: 30px;
+
+  .user-threads-container {
+    grid-column: 2/3;
+    grid-row: 2/4;
+
+    overflow: auto;
+
+    padding: 1em;
+  }
+
+  .user-comments-container {
+    grid-column: 2/3;
+    grid-row: 4/5;
+
+    overflow: auto;
+
+    padding: 1em;
+  }
+
+  .user-infos-container {
+    grid-column: 3/4;
+    grid-row: 2/3;
+
+    background-color: rgb(209, 209, 209);
+    border-radius: 0.5em;
+
+    padding: 1em;
+    margin: 0.5em;
+
+    h2 {
+      border-bottom: 1px solid black;
+    }
+
+    .user-infos {
+      margin-top: 1em;
+
+      .user-info {
+        margin: 0.5em;
+      }
+
+      .user-info-ans {
+        margin: 0.1em 0 0 0.5em;
+      }
+    }
+  }
+}
