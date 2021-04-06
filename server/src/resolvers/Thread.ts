@@ -103,6 +103,7 @@ export class ThreadResolver {
     }
 
     // update the post
+    post.title = title;
     post.content = content;
     post.updated = true;
 

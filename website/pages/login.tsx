@@ -5,6 +5,7 @@ import { useLoginMutation } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
 import Link from "next/link";
 import { __auth__, __userId__, __user__ } from "../env";
+import Head from "next/head";
 
 const Login: React.FC = () => {
   const [login] = useLoginMutation();
@@ -16,48 +17,53 @@ const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <div className="layout">
-      <div className="form-container">
-        <label>Username</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.currentTarget.value)} />
-        <label>Password</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
+    <>
+      <Head>
+        <title>Login Page</title>
+      </Head>
+      <div className="layout">
+        <div className="form-container">
+          <label>Username</label>
+          <input type="text" value={username} onChange={(e) => setUsername(e.currentTarget.value)} />
+          <label>Password</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
 
-        <Button
-          name="Submit"
-          onClick={async () => {
-            const {
-              data: {
-                login: { data, error, authorizationToken },
-              },
-            } = await login({
-              variables: {
-                username,
-                password,
-              },
-            });
+          <Button
+            name="Submit"
+            onClick={async () => {
+              const {
+                data: {
+                  login: { data, error, authorizationToken },
+                },
+              } = await login({
+                variables: {
+                  username,
+                  password,
+                },
+              });
 
-            if (error) {
-              setError(true);
-              setErrorMessage(error);
-            }
+              if (error) {
+                setError(true);
+                setErrorMessage(error);
+              }
 
-            if (data) {
-              sessionStorage.setItem(__userId__, JSON.stringify(data.id));
-              sessionStorage.setItem(__auth__, JSON.stringify(authorizationToken));
-              sessionStorage.setItem(__user__, JSON.stringify(data.username));
-              Router.push("/");
-            }
-          }}
-        />
+              if (data) {
+                sessionStorage.setItem(__userId__, JSON.stringify(data.id));
+                sessionStorage.setItem(__auth__, JSON.stringify(authorizationToken));
+                sessionStorage.setItem(__user__, JSON.stringify(data.username));
+                Router.push("/");
+              }
+            }}
+          />
 
-        <div className="other-info">
-          Don't have an account? <Link href="/register">Register</Link>
+          <div className="other-info">
+            Don't have an account? <Link href="/register">Register</Link>
+          </div>
+
+          {error && <div className="form-info">{errorMessage}</div>}
         </div>
-
-        {error && <div className="form-info">{errorMessage}</div>}
       </div>
-    </div>
+    </>
   );
 };
 

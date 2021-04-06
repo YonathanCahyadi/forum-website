@@ -1,0 +1,10 @@
+mutation UpdateThread($threadId: String!, $title: String!, $content: String!) {
+  updateThread(threadId: $threadId, title: $title, content: $content) {
+    data {
+      id
+      content
+      title
+    }
+    error
+  }
+}

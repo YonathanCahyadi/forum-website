@@ -10,20 +10,23 @@ interface ItemProps {
   linkOnClick?: string;
   createdByUsername: string;
   owned: boolean;
+  edited: boolean;
 }
 
 const Wraper: React.FC = ({ children }) => {
   return <div className="feeds">{children}</div>;
 };
 
-const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, linkOnClick }) => {
+const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, linkOnClick, edited }) => {
   const [deleteThread] = useDeleteThreadMutation();
 
   return (
     <div className="feed-item-container">
       <Link href={linkOnClick ?? "/"}>
         <div className="feed-item">
-          <sub>{date.toDateString()}</sub>
+          <sub>
+            {date.toDateString()} {edited && <pre>| edited</pre>}
+          </sub>
           <h2>{title}</h2>
           <sub>{createdByUsername}</sub>
         </div>
@@ -33,7 +36,8 @@ const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, 
           <Button
             name="Edit"
             onClick={async (e) => {
-              e.preventDefault();
+              e.stopPropagation();
+              Router.push(`/thread/${id}?edit=true`);
             }}
           />
 

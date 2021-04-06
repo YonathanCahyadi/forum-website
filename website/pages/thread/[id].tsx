@@ -1,7 +1,14 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import Comment from "../../components/Comment";
-import { GetThreadByIdDocument, GetThreadByIdQuery, Thread, useGetCommentsByThreadIdQuery } from "../../graphql/generated/graphql";
+import {
+  GetThreadByIdDocument,
+  GetThreadByIdQuery,
+  Thread,
+  useDeleteThreadMutation,
+  useGetCommentsByThreadIdQuery,
+  useUpdateThreadMutation,
+} from "../../graphql/generated/graphql";
 import client from "../../lib/apollo";
 import withAppoloProvider from "../../lib/withApolloProvider";
 
@@ -11,9 +18,11 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import Router from "next/router";
 import Link from "next/link";
+import Button from "../../components/Button";
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const id = ctx.params.id as string;
+  const editing = ctx.query.edit ?? false;
 
   const { data, error = null }: ApolloQueryResult<GetThreadByIdQuery> = await client().query({
     query: GetThreadByIdDocument,
@@ -23,23 +32,36 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   return {
     props: {
       threadData: data.getThreadById.data[0],
+      editing,
     },
   };
 };
 
 interface PostProps {
   threadData: Thread;
+  editing: boolean;
 }
 
-const Post: React.FC<PostProps> = ({ threadData }) => {
+const Post: React.FC<PostProps> = ({ threadData, editing }) => {
   const { data: commentDatas, loading: commentLoading } = useGetCommentsByThreadIdQuery({ variables: { threadId: threadData.id } });
   const [userId, setUserId] = useState(null);
   const [authToken, setAuthToken] = useState(null);
 
+  const [threadTitle, setThreadTitle] = useState(threadData.title);
+  const [threadContent, setThreadContent] = useState(threadData.content);
+
+  const [currentlyEditing, setCurrentlyEditing] = useState(editing);
+  const [allowedToEdit, setAllowedToEdit] = useState(false);
+
+  const [deleteThread] = useDeleteThreadMutation();
+  const [updateThread] = useUpdateThreadMutation();
+
   useEffect(() => {
     setUserId(JSON.parse(sessionStorage.getItem(__userId__)));
     setAuthToken(JSON.parse(sessionStorage.getItem(__auth__)));
-  });
+
+    setAllowedToEdit(threadData.createdBy.id === JSON.parse(sessionStorage.getItem(__userId__)));
+  }, []);
 
   if (!threadData) {
     return <div>Error</div>;
@@ -64,13 +86,57 @@ const Post: React.FC<PostProps> = ({ threadData }) => {
             <sub className="thread-username">{threadData.createdBy.username}</sub>
           </Link>
 
-          <h1>{threadData.title}</h1>
+          <h1>
+            {!allowedToEdit || !currentlyEditing ? (
+              threadTitle
+            ) : (
+              <textarea value={threadTitle} onChange={(e) => setThreadTitle(e.currentTarget.value)} disabled={!allowedToEdit || !currentlyEditing} />
+            )}
+          </h1>
 
           <sub>
-            {new Date(threadData.createdAt).toDateString()} {threadData.updated && <pre>| updated</pre>}
+            {new Date(threadData.createdAt).toDateString()} {threadData.updated && <pre>| edited</pre>}
           </sub>
 
-          <main>{threadData.content}</main>
+          <main>
+            <textarea
+              value={threadContent}
+              onChange={(e) => setThreadContent(e.currentTarget.value)}
+              disabled={!allowedToEdit || !currentlyEditing}
+            />
+          </main>
+
+          {allowedToEdit && !currentlyEditing && (
+            <div>
+              <Button name="Edit" onClick={() => setCurrentlyEditing((prev) => !prev)} />
+              <Button
+                name="Delete"
+                onClick={async () => {
+                  const { data } = await deleteThread({ variables: { threadId: threadData.id } });
+
+                  if (data) {
+                    Router.push("/");
+                  }
+                }}
+              />
+            </div>
+          )}
+
+          {allowedToEdit && currentlyEditing && (
+            <div>
+              <Button
+                name="Update"
+                onClick={async () => {
+                  const { data } = await updateThread({ variables: { threadId: threadData.id, title: threadTitle, content: threadContent } });
+
+                  if (data) {
+                    Router.reload();
+                  }
+                }}
+              />
+              <Button name="Cancel" onClick={() => setCurrentlyEditing((prev) => !prev)} />
+            </div>
+          )}
 
           <div className="thread-comments">
             <Comment.Wrapper heading={true} loading={commentLoading}>
