@@ -33,6 +33,8 @@ First we need to start the **Server**, to do this we can go to the server direct
       - **NODE_ENV** (set the value to either **production** or **development**)
       - **PORT**
       - **DATABASE_NAME**
+      - **DATABASE_USER**
+      - **DATABASE_PASSWORD**
       - **JWT_SECRET**
 2. Install all the required dependency, by running the following command:
         

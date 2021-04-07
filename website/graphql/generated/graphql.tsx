@@ -41,6 +41,7 @@ export type Mutation = {
   postThread: ThreadResponse;
   updateThread: ThreadResponse;
   deleteThread: ThreadResponse;
+  addView: ThreadResponse;
   postComment: CommentResponse;
   deleteComment: CommentResponse;
   updateComment: CommentResponse;
@@ -73,6 +74,11 @@ export type MutationUpdateThreadArgs = {
 
 
 export type MutationDeleteThreadArgs = {
+  threadId: Scalars['String'];
+};
+
+
+export type MutationAddViewArgs = {
   threadId: Scalars['String'];
 };
 
@@ -138,6 +144,7 @@ export type Thread = {
   updated: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  views: Scalars['Float'];
 };
 
 export type ThreadResponse = {
@@ -162,6 +169,23 @@ export type UserResponse = {
   authorizationToken?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
 };
+
+export type AddViewMutationVariables = Exact<{
+  threadId: Scalars['String'];
+}>;
+
+
+export type AddViewMutation = (
+  { __typename?: 'Mutation' }
+  & { addView: (
+    { __typename?: 'ThreadResponse' }
+    & Pick<ThreadResponse, 'error'>
+    & { data?: Maybe<Array<(
+      { __typename?: 'Thread' }
+      & Pick<Thread, 'id' | 'title' | 'content' | 'views' | 'createdAt' | 'updatedAt' | 'updated'>
+    )>> }
+  ) }
+);
 
 export type DeleteCommentMutationVariables = Exact<{
   commentId: Scalars['String'];
@@ -340,7 +364,7 @@ export type GetAllThreadQuery = (
     & Pick<ThreadResponse, 'error'>
     & { data?: Maybe<Array<(
       { __typename?: 'Thread' }
-      & Pick<Thread, 'id' | 'title' | 'content' | 'updated' | 'createdAt' | 'updatedAt'>
+      & Pick<Thread, 'id' | 'title' | 'content' | 'updated' | 'createdAt' | 'updatedAt' | 'views'>
       & { createdBy: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username'>
@@ -385,7 +409,7 @@ export type GetThreadByIdQuery = (
     & Pick<ThreadResponse, 'error'>
     & { data?: Maybe<Array<(
       { __typename?: 'Thread' }
-      & Pick<Thread, 'id' | 'title' | 'content' | 'createdAt' | 'updatedAt' | 'updated'>
+      & Pick<Thread, 'id' | 'title' | 'content' | 'createdAt' | 'updatedAt' | 'updated' | 'views'>
       & { createdBy: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username'>
@@ -409,7 +433,7 @@ export type GetUserByIdQuery = (
       & Pick<User, 'id' | 'username' | 'createdAt' | 'updatedAt'>
       & { threads: Array<(
         { __typename?: 'Thread' }
-        & Pick<Thread, 'id' | 'title' | 'content' | 'createdAt' | 'updatedAt' | 'updated'>
+        & Pick<Thread, 'id' | 'title' | 'content' | 'createdAt' | 'updatedAt' | 'updated' | 'views'>
       )>, comments: Array<(
         { __typename?: 'Comment' }
         & Pick<Comment, 'id' | 'content' | 'createdAt' | 'updatedAt' | 'updated'>
@@ -441,6 +465,48 @@ export type MeQuery = (
 );
 
 
+export const AddViewDocument = gql`
+    mutation AddView($threadId: String!) {
+  addView(threadId: $threadId) {
+    data {
+      id
+      title
+      content
+      views
+      createdAt
+      updatedAt
+      updated
+    }
+    error
+  }
+}
+    `;
+export type AddViewMutationFn = Apollo.MutationFunction<AddViewMutation, AddViewMutationVariables>;
+
+/**
+ * __useAddViewMutation__
+ *
+ * To run a mutation, you first call `useAddViewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddViewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addViewMutation, { data, loading, error }] = useAddViewMutation({
+ *   variables: {
+ *      threadId: // value for 'threadId'
+ *   },
+ * });
+ */
+export function useAddViewMutation(baseOptions?: Apollo.MutationHookOptions<AddViewMutation, AddViewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddViewMutation, AddViewMutationVariables>(AddViewDocument, options);
+      }
+export type AddViewMutationHookResult = ReturnType<typeof useAddViewMutation>;
+export type AddViewMutationResult = Apollo.MutationResult<AddViewMutation>;
+export type AddViewMutationOptions = Apollo.BaseMutationOptions<AddViewMutation, AddViewMutationVariables>;
 export const DeleteCommentDocument = gql`
     mutation DeleteComment($commentId: String!) {
   deleteComment(commentId: $commentId) {
@@ -802,6 +868,7 @@ export const GetAllThreadDocument = gql`
       }
       createdAt
       updatedAt
+      views
     }
     error
   }
@@ -894,6 +961,7 @@ export const GetThreadByIdDocument = gql`
       createdAt
       updatedAt
       updated
+      views
     }
     error
   }
@@ -942,6 +1010,7 @@ export const GetUserByIdDocument = gql`
         createdAt
         updatedAt
         updated
+        views
       }
       comments {
         id

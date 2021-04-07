@@ -68,6 +68,7 @@ const UserPage: React.FC<UserPageProps> = ({ userData }) => {
                   owned={userId === userData.id}
                   linkOnClick={`/thread/${thread.id}`}
                   edited={thread.updated}
+                  views={thread.views}
                 />
               ))
             ) : (

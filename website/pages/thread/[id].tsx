@@ -5,6 +5,7 @@ import {
   GetThreadByIdDocument,
   GetThreadByIdQuery,
   Thread,
+  useAddViewMutation,
   useDeleteThreadMutation,
   useGetCommentsByThreadIdQuery,
   useUpdateThreadMutation,
@@ -55,12 +56,22 @@ const Post: React.FC<PostProps> = ({ threadData, editing }) => {
 
   const [deleteThread] = useDeleteThreadMutation();
   const [updateThread] = useUpdateThreadMutation();
+  const [addView] = useAddViewMutation();
 
   useEffect(() => {
     setUserId(JSON.parse(sessionStorage.getItem(__userId__)));
     setAuthToken(JSON.parse(sessionStorage.getItem(__auth__)));
 
     setAllowedToEdit(threadData.createdBy.id === JSON.parse(sessionStorage.getItem(__userId__)));
+
+    //update view to the Thread
+    setTimeout(async () => {
+      const { data } = await addView({ variables: { threadId: threadData.id } });
+
+      if (!data) {
+        console.log("Error Updating Views");
+      }
+    }, 30000);
   }, []);
 
   if (!threadData) {

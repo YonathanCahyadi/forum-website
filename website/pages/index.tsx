@@ -32,16 +32,17 @@ const Home: React.FC = () => {
       <div className="layout">
         <Feed.Wraper>
           {data.getAllThread.data.length !== 0 ? (
-            data.getAllThread.data.map((d) => (
+            data.getAllThread.data.map((thread) => (
               <Feed.Item
-                key={`thread-${d.id}`}
-                linkOnClick={`thread/${d.id}`}
-                id={d.id}
-                date={new Date(d.updatedAt)}
-                title={d.title}
-                createdByUsername={d.createdBy.username}
-                owned={d.createdBy.id === userId}
-                edited={d.updated}
+                key={`thread-${thread.id}`}
+                linkOnClick={`thread/${thread.id}`}
+                id={thread.id}
+                date={new Date(thread.updatedAt)}
+                title={thread.title}
+                createdByUsername={thread.createdBy.username}
+                owned={thread.createdBy.id === userId}
+                edited={thread.updated}
+                views={thread.views}
               />
             ))
           ) : (

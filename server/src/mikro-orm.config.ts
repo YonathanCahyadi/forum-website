@@ -2,15 +2,15 @@ import { MikroORM } from "@mikro-orm/core";
 import { Comment } from "./entities/Comment";
 import { Thread } from "./entities/Thread";
 import { User } from "./entities/User";
-import { __db_name__, __prod__ } from "./env";
+import { __db_name__, __db_password__, __db_user__, __prod__ } from "./env";
 import path from "path";
 
 export default {
   entities: [User, Thread, Comment],
   dbName: __db_name__,
   type: "postgresql",
-  user: "postgres",
-  password: "N@t524908",
+  user: __db_user__,
+  password: __db_password__,
   debug: !__prod__,
   migrations: {
     tableName: "mikro_orm_migrations", // name of database table with log of executed transactions

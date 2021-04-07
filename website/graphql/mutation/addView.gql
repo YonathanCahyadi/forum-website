@@ -1,0 +1,14 @@
+mutation AddView($threadId: String!) {
+  addView(threadId: $threadId) {
+    data {
+      id
+      title
+      content
+      views
+      createdAt
+      updatedAt
+      updated
+    }
+    error
+  }
+}

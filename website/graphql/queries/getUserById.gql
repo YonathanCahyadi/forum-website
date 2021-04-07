@@ -12,6 +12,7 @@ query GetUserById($userId: String!) {
         createdAt
         updatedAt
         updated
+        views
       }
       comments {
         id
