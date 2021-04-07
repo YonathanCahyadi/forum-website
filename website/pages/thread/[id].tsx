@@ -13,7 +13,7 @@ import {
 import client from "../../lib/apollo";
 import withAppoloProvider from "../../lib/withApolloProvider";
 
-import { __auth__, __userId__ } from "../../env";
+import { __auth__, __userId__, __time_before_counted_as_view__ } from "../../env";
 
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -65,13 +65,16 @@ const Post: React.FC<PostProps> = ({ threadData, editing }) => {
     setAllowedToEdit(threadData.createdBy.id === JSON.parse(sessionStorage.getItem(__userId__)));
 
     //update view to the Thread
-    setTimeout(async () => {
+    const timeout = setTimeout(async () => {
       const { data } = await addView({ variables: { threadId: threadData.id } });
 
       if (!data) {
         console.log("Error Updating Views");
       }
-    }, 30000);
+    }, __time_before_counted_as_view__);
+
+    // if the user view the thread in less than the specified amount it should not count as a view
+    return clearTimeout(timeout);
   }, []);
 
   if (!threadData) {
