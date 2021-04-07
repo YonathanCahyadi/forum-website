@@ -150,4 +150,23 @@ export class ThreadResolver {
       data: [thread],
     };
   }
+
+  @Mutation(() => ThreadResponse)
+  async addView(@Arg("threadId") threadId: string, @Ctx() { em }: AppContext): Promise<ThreadResponse> {
+    // check if thread exist
+    const thread = await em.findOne(Thread, { id: threadId, deleted: false });
+    if (!thread) {
+      return {
+        error: "Invalid operation (Thread not found).",
+      };
+    }
+
+    // add views
+    thread.views = thread.views + 1;
+    await em.flush();
+
+    return {
+      data: [thread],
+    };
+  }
 }

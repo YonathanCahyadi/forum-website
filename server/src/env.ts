@@ -13,9 +13,13 @@ const checkEnvVariable = (envName: string) => {
 
 // check if the reqiured Env variable is set
 checkEnvVariable("DATABASE_NAME");
+checkEnvVariable("DATABASE_USER");
+checkEnvVariable("DATABASE_PASSWORD");
 checkEnvVariable("JWT_SECRET");
 checkEnvVariable("PORT");
 
 export const __port__ = parseInt(process.env.PORT as string);
 export const __db_name__ = process.env.DATABASE_NAME;
+export const __db_user__ = process.env.DATABASE_USER;
+export const __db_password__ = process.env.DATABASE_PASSWORD;
 export const __jwt_secret__ = process.env.JWT_SECRET as JWT.Secret;

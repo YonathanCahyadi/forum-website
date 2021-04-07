@@ -41,4 +41,8 @@ export class Thread {
   @Field()
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
+
+  @Field()
+  @Property()
+  views: number = 0;
 }

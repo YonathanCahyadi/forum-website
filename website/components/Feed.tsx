@@ -11,13 +11,14 @@ interface ItemProps {
   createdByUsername: string;
   owned: boolean;
   edited: boolean;
+  views: number;
 }
 
 const Wraper: React.FC = ({ children }) => {
   return <div className="feeds">{children}</div>;
 };
 
-const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, linkOnClick, edited }) => {
+const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, linkOnClick, edited, views }) => {
   const [deleteThread] = useDeleteThreadMutation();
 
   return (
@@ -27,7 +28,10 @@ const Item: React.FC<ItemProps> = ({ id, title, createdByUsername, owned, date, 
           <sub>
             {date.toDateString()} {edited && <pre>| edited</pre>}
           </sub>
-          <h2>{title}</h2>
+          <div>
+            <h2>{title}</h2>
+            <sub>{views} views</sub>
+          </div>
           <sub>{createdByUsername}</sub>
         </div>
       </Link>

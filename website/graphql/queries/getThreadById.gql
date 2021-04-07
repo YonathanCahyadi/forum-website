@@ -11,6 +11,7 @@ query GetThreadById($id: String!) {
       createdAt
       updatedAt
       updated
+      views
     }
     error
   }
