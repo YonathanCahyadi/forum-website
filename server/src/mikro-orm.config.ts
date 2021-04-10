@@ -2,11 +2,13 @@ import { MikroORM } from "@mikro-orm/core";
 import { Comment } from "./entities/Comment";
 import { Thread } from "./entities/Thread";
 import { User } from "./entities/User";
-import { __db_name__, __db_password__, __db_user__, __prod__ } from "./env";
+import { __db_name__, __db_password__, __db_user__, __prod__, __db_host__, __db_port__ } from "./env";
 import path from "path";
 
 export default {
   entities: [User, Thread, Comment],
+  host: __db_host__,
+  port: __db_port__,
   dbName: __db_name__,
   type: "postgresql",
   user: __db_user__,
