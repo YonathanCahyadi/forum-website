@@ -1,5 +1,5 @@
 import JWT from "jsonwebtoken";
-import { __jwt_secret__ } from "./env";
+import { __jwt_secret__ } from "../env";
 
 const payloadName = "userId";
 const algorithm = "HS256";

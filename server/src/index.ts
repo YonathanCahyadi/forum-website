@@ -1,5 +1,5 @@
 import { __port__ } from "./env";
-import Server from "./server";
+import Server from "./lib/server";
 
 const server = new Server(__port__);
 

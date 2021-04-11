@@ -1,16 +1,16 @@
 import express, { Express } from "express";
 import morgan from "morgan";
-import { __db_name__, __jwt_secret__, __prod__ } from "./env";
+import { __db_name__, __jwt_secret__, __prod__ } from "../env";
 import { ApolloServer } from "apollo-server-express";
-import dbConfig from "./mikro-orm.config";
+import dbConfig from "../mikro-orm.config";
 import { Connection, IDatabaseDriver, MikroORM } from "@mikro-orm/core";
 import { buildSchema } from "type-graphql";
-import { UserResolver } from "./resolvers/User";
-import AppContext from "./AppContext";
+import { UserResolver } from "../resolvers/User";
+import AppContext from "../types/AppContext";
 import { verifyToken } from "./authentication";
-import { ThreadResolver } from "./resolvers/Thread";
+import { ThreadResolver } from "../resolvers/Thread";
 import cors from "cors";
-import CommentResolver from "./resolvers/Comment";
+import CommentResolver from "../resolvers/Comment";
 
 class Server {
   port: number;

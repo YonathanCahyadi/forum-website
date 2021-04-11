@@ -1,7 +1,6 @@
 import { QueryOrder } from "@mikro-orm/core";
-import { threadId } from "node:worker_threads";
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
-import AppContext from "../AppContext";
+import AppContext from "../types/AppContext";
 import { Comment } from "../entities/Comment";
 
 @ObjectType()
