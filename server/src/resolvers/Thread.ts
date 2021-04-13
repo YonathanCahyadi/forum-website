@@ -15,24 +15,33 @@ class ThreadResponse {
 
 @Resolver()
 export class ThreadResolver {
-  private limitPerPage = 10;
-
   @Query(() => ThreadResponse)
-  async getAllThread(@Arg("page", () => Int, { defaultValue: 0 }) page: number, @Ctx() { em }: AppContext): Promise<ThreadResponse> {
-    if (page < 0) {
+  async getAllThread(
+    @Arg("limit", () => Int, { defaultValue: 1 }) limit: number,
+    @Arg("cursor", () => String, { nullable: true }) cursor: string,
+    @Ctx() { em }: AppContext
+  ): Promise<ThreadResponse> {
+    if (limit <= 0) {
       return {
-        error: "Page cannot be less than 0.",
+        error: "Limit cannot be less than or equals 0.",
       };
     }
 
-    const threads = await em.find(
-      Thread,
-      { deleted: false },
-      ["createdBy", "comments"],
-      { updatedAt: QueryOrder.DESC },
-      this.limitPerPage,
-      page * this.limitPerPage
-    );
+    let threads;
+
+    let date;
+    if (cursor) {
+      date = new Date(cursor);
+      threads = await em.find(
+        Thread,
+        { deleted: false, $and: [{ "createdAt <": date }] },
+        ["createdBy", "comments"],
+        { updatedAt: QueryOrder.DESC },
+        limit
+      );
+    } else {
+      threads = await em.find(Thread, { deleted: false }, ["createdBy", "comments"], { updatedAt: QueryOrder.DESC }, limit);
+    }
 
     return {
       data: threads,

@@ -11,7 +11,21 @@ const client = () => {
           typeof window === "undefined" ? null : sessionStorage.getItem("auth") ? "Bearer " + JSON.parse(sessionStorage.getItem("auth")) : null,
       },
     }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            getAllThread: {
+              keyArgs: false,
+
+              merge(existing = [], incoming) {
+                return [...existing, incoming];
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 };
 

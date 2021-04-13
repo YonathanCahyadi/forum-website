@@ -121,7 +121,8 @@ export type QueryGetUserByUsernameArgs = {
 
 
 export type QueryGetAllThreadArgs = {
-  page?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['String']>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 
@@ -353,7 +354,8 @@ export type UpdateThreadMutation = (
 );
 
 export type GetAllThreadQueryVariables = Exact<{
-  page?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -852,8 +854,8 @@ export type UpdateThreadMutationHookResult = ReturnType<typeof useUpdateThreadMu
 export type UpdateThreadMutationResult = Apollo.MutationResult<UpdateThreadMutation>;
 export type UpdateThreadMutationOptions = Apollo.BaseMutationOptions<UpdateThreadMutation, UpdateThreadMutationVariables>;
 export const GetAllThreadDocument = gql`
-    query GetAllThread($page: Int) {
-  getAllThread(page: $page) {
+    query GetAllThread($limit: Int, $cursor: String) {
+  getAllThread(limit: $limit, cursor: $cursor) {
     data {
       id
       title
@@ -887,7 +889,8 @@ export const GetAllThreadDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllThreadQuery({
  *   variables: {
- *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

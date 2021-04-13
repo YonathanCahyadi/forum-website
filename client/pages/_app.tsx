@@ -6,6 +6,7 @@ import "../styles/LoginPage.scss";
 import "../styles/ThreadPostPage.scss";
 import "../styles/UserPage.scss";
 
+import "../styles/Navbar.scss";
 import "../styles/Feed.scss";
 import "../styles/Button.scss";
 import "../styles/Comment.scss";
