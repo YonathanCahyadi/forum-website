@@ -1,9 +1,9 @@
 import { Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
-import AppContext from "../AppContext";
+import AppContext from "../types/AppContext";
 import { User } from "../entities/User";
 import argon2 from "argon2";
 import { __jwt_secret__ } from "../env";
-import { createToken } from "../authentication";
+import { createToken } from "../lib/authentication";
 
 @ObjectType()
 class UserResponse {

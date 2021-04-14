@@ -1,12 +1,3 @@
-.home {
-  display: grid;
-
-  grid-template-columns: 0.3fr 1fr 0.3fr;
-  grid-template-rows: 0.1fr auto;
-
-  row-gap: 10px;
-}
-
 nav {
   position: sticky;
   top: 0;

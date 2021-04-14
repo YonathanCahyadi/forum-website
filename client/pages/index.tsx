@@ -7,14 +7,14 @@ import { useGetAllThreadQuery } from "../graphql/generated/graphql";
 import withApolloProvider from "../lib/withApolloProvider";
 
 const Home: React.FC = () => {
-  const { data, error, loading, fetchMore, variables } = useGetAllThreadQuery({ variables: { page: 0 } });
+  const { data, error, loading, fetchMore, variables, previousData } = useGetAllThreadQuery({ variables: { limit: null } });
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     setUserId(JSON.parse(sessionStorage.getItem(__userId__)));
   });
 
-  if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
+  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
   if (loading) return <Spinner />;
 
   return (

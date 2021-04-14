@@ -1,16 +1,16 @@
 # Forum Website
 This is project made by Yonathan Cahyadi. This project goal is to make a Simple Forum Website, like Reddit. This is a **Full Stack Project** with the stack/technologies used are:
-- Website:
+- **Client**:
     - React (**specifically NextJS**)
     - Apollo Client
     - Scss/Sass (for styling popular alternative to css)
-- Server:
+- **Server**:
   - Express
   - Apollo Server
   - Type-graphql
   - Mikro-orm
   - JWT
-- Database:
+- **Database**:
   - Postgres
 
 # Implemented Feature
@@ -79,10 +79,10 @@ First we need to start the **Server**, to do this we can go to the server direct
         npm run dev
 
 **P.S** To open the apollo server sandbox go to **http://localhost:PORT/graphql**, this only work if the NODE_ENV is on **development**.
-## Running the Website
-After we start up the server using the instruction listed above, we now can start the **Website** web server, to do this we need to go to the website directory adn do the following step:
+## Running the Client
+After we start up the server using the instruction listed above, we now can start the **Client** web server, to do this we need to go to the client directory and do the following step:
     
-   1. Make a .env file on the root dir of the website dir or set an **environment variable** containing.
+   1. Make a .env file on the root dir of the client dir or set an **environment variable** containing.
       - **NEXT_PUBLIC_SERVER_URL** (this contain the url of your graphql server ex. http://localhost:3001/graphql)
   
    2. Install all the required dependency, by running the following command:

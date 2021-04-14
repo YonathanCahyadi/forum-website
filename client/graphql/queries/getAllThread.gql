@@ -1,5 +1,5 @@
-query GetAllThread($page: Int) {
-  getAllThread(page: $page) {
+query GetAllThread($limit: Int, $cursor: String) {
+  getAllThread(limit: $limit, cursor: $cursor) {
     data {
       id
       title
