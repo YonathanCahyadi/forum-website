@@ -17,11 +17,11 @@ class ThreadResponse {
 export class ThreadResolver {
   @Query(() => ThreadResponse)
   async getAllThread(
-    @Arg("limit", () => Int, { defaultValue: 1 }) limit: number,
+    @Arg("limit", () => Int, { nullable: true }) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string,
     @Ctx() { em }: AppContext
   ): Promise<ThreadResponse> {
-    if (limit <= 0) {
+    if (limit <= 0 && limit) {
       return {
         error: "Limit cannot be less than or equals 0.",
       };
@@ -32,6 +32,7 @@ export class ThreadResolver {
     let date;
     if (cursor) {
       date = new Date(cursor);
+
       threads = await em.find(
         Thread,
         { deleted: false, $and: [{ "createdAt <": date }] },
